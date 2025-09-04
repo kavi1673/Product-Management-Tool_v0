@@ -1,4 +1,4 @@
-## Product Tool
+![classdiagram drawio](https://github.com/user-attachments/assets/e2f22cc9-969a-42b3-a68d-3f1ec40a7271)## Product Tool
 
 Internal product management tool for eCommerce, built with Spring Boot 3, JPA, and H2/MySQL. It provides REST APIs to manage categories, their dynamic attributes, and products with typed attribute values.
 
@@ -100,5 +100,12 @@ Example: create product
   ]
 }
 ```
+![Upl![db diagram](https://github.com/user-attachments/assets/e6d805c7-b3a5-4c9c-a5a0-90cbfcdcfd31)oading classdiagram.drawio.svg…]()
+
+
+
+https://github.com/user-attachments/assets/57dcee19-50a6-45c4-87fe-e1bf93d05138
+
+
 
 
