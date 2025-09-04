@@ -1,104 +1,104 @@
-<<<<<<< HEAD
-# Internal-product-management-tool
-An internal tool to manage the product catalog of an eCommerce platform. The platform currently sells dresses and shoes. Every 6 months, it plans to expand into new categories (e.g., watches, smartphones, grooming products, accessories). Each category has its own unique attributes. 
-=======
-# Internal Product Management Tool
+## Product Tool
 
-Tech: Java 17, Spring Boot 3, Spring Data JPA, H2, Validation, springdoc OpenAPI.
+Internal product management tool for eCommerce, built with Spring Boot 3, JPA, and H2/MySQL. It provides REST APIs to manage categories, their dynamic attributes, and products with typed attribute values.
 
-## How to run
+### Tech stack
+- **Java**: 17
+- **Spring Boot**: 3.5.4 (Web, Data JPA, Validation)
+- **API Docs**: springdoc-openapi with Swagger UI
 
-Windows PowerShell:
+### Requirements
+- Java 17+
+- Maven (or use the included Maven Wrapper)
 
+### Quick start (Windows PowerShell)
 ```powershell
-cd C:\Users\HP\Downloads\producttool\producttool
-.\mvnw.cmd -DskipTests spring-boot:run
+# From the project root
+./mvnw.cmd clean spring-boot:run
 ```
 
-Then open:
-- Swagger UI: http://localhost:8080/swagger-ui
-- OpenAPI JSON: http://localhost:8080/api-docs
-- H2 Console: http://localhost:8080/h2-console (JDBC: `jdbc:h2:file:./data/producttool`, user `sa`, empty password)
-- Minimal UI: http://localhost:8080/index.html
+App starts on `http://localhost:8080`.
 
-Build a jar:
+### Useful URLs
+- Swagger UI: `http://localhost:8080/swagger-ui`
+- OpenAPI JSON: `http://localhost:8080/api-docs`
+
+
+### Build a jar
 ```powershell
-cd C:\Users\HP\Downloads\producttool\producttool
-.\mvnw.cmd -DskipTests package
-java -jar target\producttool-0.0.1-SNAPSHOT.jar
+./mvnw.cmd clean package -DskipTests
+java -jar target/producttool-0.0.1-SNAPSHOT.jar
 ```
 
-If port 8080 is in use, use another port:
-```powershell
-java -jar target\producttool-0.0.1-SNAPSHOT.jar --server.port=8081
+### Configuration
+Default configuration is in `src/main/resources/application.properties`:
+- `spring.datasource.url=jdbc:h2:file:./data/producttool` (file persisted under `data/`)
+- `spring.jpa.hibernate.ddl-auto=update`
+- `springdoc.swagger-ui.path=/swagger-ui`
+
+To switch to MySQL, set the following (example):
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/producttool?createDatabaseIfNotExist=true
+spring.datasource.username=root
+spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
 ```
 
-## Step 1: Database Design (ERD)
+### Domain overview
+- **Category**: has a name/description and a set of **Category Attributes**.
+- **Category Attribute**: defines name, data type (`STRING`, `NUMBER`, `BOOLEAN`, `DATE`), required flag, and optional allowed values (CSV).
+- **Product**: belongs to one category and contains typed attribute values according to that category’s attributes.
 
-Mermaid ERD: `src/main/resources/static/diagrams/erd.mmd`
+### REST API
 
-Justification:
-- Categories define their own attributes (EAV pattern) using `CategoryAttribute`.
-- `ProductAttributeValue` stores values using typed columns (`value_string`, `value_number`, etc.) for integrity and indexing while keeping flexibility.
-- Uniqueness constraints: attribute name unique per category, one value per product-attribute pair.
-- Scales to new categories and attributes without schema changes; add more `DataType`s if needed.
+Base path: `/api`
 
-## Step 2: Class Design
+#### Categories
+- `POST /api/categories` — create category
+- `GET /api/categories/{id}` — get category with attributes
+- `PATCH /api/categories/{id}` — update category
+- `DELETE /api/categories/{id}` — delete category
+- `POST /api/categories/{id}/attributes` — add attribute to category
+- `GET /api/categories/{id}/attributes` — list attributes of category
 
-Mermaid Class Diagram: `src/main/resources/static/diagrams/class.mmd`
-
-- Services encapsulate validation and business rules.
-- Controllers are thin, DTOs separate API shape from entities.
-
-## Step 3: Implementation
-
-APIs (see Swagger UI):
-- Categories: create, get, update, delete; add/list attributes
-- Products: create, get, update with dynamic attributes
-
-Validation:
-- Type-safe attribute values based on `DataType`
-- Required flag enforced
-- Allowed values for STRING attributes
-
-Minimal UI:
-- `index.html` provides quick manual testing for categories, attributes, and products.
-
-## Export diagrams to PNG
-
-If you have Node.js installed:
-```bash
-npm install -g @mermaid-js/mermaid-cli
-# From repo root
-mmdc -i src/main/resources/static/diagrams/erd.mmd -o docs/erd.png
-mmdc -i src/main/resources/static/diagrams/class.mmd -o docs/class.png
+Example: create category
+```json
+{
+  "name": "Electronics",
+  "description": "Devices and gadgets"
+}
 ```
-The generated images will be under `docs/`.
 
-## Record a short demo
+Example: add attribute to category
+```json
+{
+  "name": "Color",
+  "dataType": "STRING",
+  "required": true,
+  "allowedValuesCsv": "Black,White,Red"
+}
+```
 
-- Start the app (on 8081 if needed) and open http://localhost:8081/index.html
-- Use any screen recorder (e.g., Xbox Game Bar Win+G) to record:
-  - Creating a category and attributes
-  - Creating a product with attributes
-  - Viewing the product
-- Save as `docs/demo.mp4`.
+#### Products
+- `POST /api/products` — create product
+- `GET /api/products/{id}` — get product
+- `PATCH /api/products/{id}` — update product
 
-## Push to GitHub
+Example: create product
+```json
+{
+  "sku": "IPHONE15-BLK-128",
+  "title": "iPhone 15",
+  "description": "128GB, Black",
+  "categoryId": 1,
+  "price": 999.99,
+  "active": true,
+  "attributes": [
+    { "categoryAttributeId": 10, "value": "Black" },
+    { "categoryAttributeId": 11, "value": "128" },
+    { "categoryAttributeId": 12, "value": "true" }
+  ]
+}
+```
 
-Initialize and push (replace YOUR_GITHUB_URL):
-```powershell
-cd C:\Users\HP\Downloads\producttool\producttool
-git init
-# Optional: install Git LFS for large media
-# https://git-lfs.com
-# git lfs install
-# git lfs track "*.png" "*.mp4"
 
-git add .
-git commit -m "Product tool: schema, services, UI, diagrams, docs"
-git branch -M main
-git remote add origin YOUR_GITHUB_URL.git
-git push -u origin main
-``` 
->>>>>>> 8e685fd (Initial submission: backend, UI, diagrams, docs, demo)
