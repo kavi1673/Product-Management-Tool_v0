@@ -1,0 +1,40 @@
+erDiagram
+	CATEGORY ||--o{ CATEGORY_ATTRIBUTE : has
+	CATEGORY ||--o{ PRODUCT : groups
+	PRODUCT ||--o{ PRODUCT_ATTRIBUTE_VALUE : has
+	CATEGORY_ATTRIBUTE ||--o{ PRODUCT_ATTRIBUTE_VALUE : constrains
+
+	CATEGORY {
+		LONG id PK
+		STRING name
+		STRING description
+	}
+
+	CATEGORY_ATTRIBUTE {
+		LONG id PK
+		LONG category_id FK
+		STRING name
+		ENUM data_type
+		BOOLEAN required
+		STRING allowed_values
+	}
+
+	PRODUCT {
+		LONG id PK
+		STRING sku
+		STRING title
+		STRING description
+		LONG category_id FK
+		DECIMAL price
+		BOOLEAN active
+	}
+
+	PRODUCT_ATTRIBUTE_VALUE {
+		LONG id PK
+		LONG product_id FK
+		LONG category_attribute_id FK
+		STRING value_string
+		DOUBLE value_number
+		BOOLEAN value_boolean
+		DATE value_date
+	} 

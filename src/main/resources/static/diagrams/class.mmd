@@ -1,0 +1,53 @@
+classDiagram
+	direction TB
+	class Category {
+		+Long id
+		+String name
+		+String description
+		+List~CategoryAttribute~ attributes
+	}
+	class CategoryAttribute {
+		+Long id
+		+String name
+		+DataType dataType
+		+boolean required
+		+String allowedValuesCsv
+	}
+	class DataType {
+		<<enumeration>>
+		STRING
+		NUMBER
+		BOOLEAN
+		DATE
+	}
+	class Product {
+		+Long id
+		+String sku
+		+String title
+		+String description
+		+BigDecimal price
+		+boolean active
+		+Category category
+		+List~ProductAttributeValue~ attributeValues
+	}
+	class ProductAttributeValue {
+		+Long id
+		+String valueString
+		+Double valueNumber
+		+Boolean valueBoolean
+		+LocalDate valueDate
+	}
+	class CategoryService
+	class ProductService
+	class ValidationService
+	class CategoryController
+	class ProductController
+
+	Category "1" --> "*" CategoryAttribute : defines
+	Category "1" --> "*" Product : groups
+	Product "1" --> "*" ProductAttributeValue : has
+	CategoryAttribute "1" --> "*" ProductAttributeValue : constrains
+
+	CategoryController --> CategoryService
+	ProductController --> ProductService
+	ProductService --> ValidationService 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Product Tool</title>
+	<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+	<h1>Internal Product Management Tool</h1>
+	<nav>
+		<a href="/swagger-ui" target="_blank">Swagger UI</a>
+		<a href="/h2-console" target="_blank">H2 Console</a>
+		<a href="/static/diagrams/erd.mmd" target="_blank">ERD (Mermaid)</a>
+		<a href="/static/diagrams/class.mmd" target="_blank">Class Diagram (Mermaid)</a>
+	</nav>
+
+	<section>
+		<h2>Create Category</h2>
+		<label>Name <input id="cat-name" /></label>
+		<label>Description <input id="cat-desc" /></label>
+		<button id="btn-create-cat">Create Category</button>
+		<pre id="cat-out"></pre>
+	</section>
+
+	<section>
+		<h2>Add Attribute to Category</h2>
+		<label>Category ID <input id="attr-cat-id" type="number" /></label>
+		<label>Name <input id="attr-name" /></label>
+		<label>Data Type
+			<select id="attr-type">
+				<option>STRING</option>
+				<option>NUMBER</option>
+				<option>BOOLEAN</option>
+				<option>DATE</option>
+			</select>
+		</label>
+		<label>Required <input id="attr-req" type="checkbox" /></label>
+		<label>Allowed Values CSV <input id="attr-allowed" /></label>
+		<button id="btn-add-attr">Add Attribute</button>
+		<pre id="attr-out"></pre>
+	</section>
+
+	<section>
+		<h2>Create Product</h2>
+		<label>SKU <input id="prod-sku" /></label>
+		<label>Title <input id="prod-title" /></label>
+		<label>Description <input id="prod-desc" /></label>
+		<label>Category ID <input id="prod-cat-id" type="number" /></label>
+		<label>Price <input id="prod-price" type="number" step="0.01" /></label>
+		<label>Active <input id="prod-active" type="checkbox" checked /></label>
+		<div>
+			<button id="btn-load-attrs">Load Attributes</button>
+			<div id="dyn-attrs"></div>
+		</div>
+		<button id="btn-create-prod">Create Product</button>
+		<pre id="prod-out"></pre>
+	</section>
+
+	<section>
+		<h2>Get Product</h2>
+		<label>Product ID <input id="get-prod-id" type="number" /></label>
+		<button id="btn-get-prod">Get</button>
+		<pre id="get-prod-out"></pre>
+	</section>
+
+	<script src="/app.js"></script>
+</body>
+</html> 
